@@ -38,7 +38,10 @@
       <p class="eyebrow">Fine Fragrance · Est. London</p>
       <h1>Wear the<br /><em>extraordinary.</em></h1>
       <p class="hero__sub">A curated collection of fifteen rare compositions, crafted in small batches.</p>
-      <a href="#collection" class="btn btn--primary">Discover the Collection</a>
+      <div class="hero__actions">
+        <a href="#collection" class="btn btn--primary">Discover the Collection</a>
+        <button class="btn btn--ghost" id="openQuizBtn" type="button">Find your scent</button>
+      </div>
     </div>
     <div class="hero__visual" aria-hidden="true">
       <div class="hero__glow"></div>
@@ -268,6 +271,39 @@
       </div>
     </div>
   </aside>
+
+  <!-- Scent Finder Quiz -->
+  <div class="quiz" id="quizModal" hidden>
+    <div class="quiz__backdrop" data-close-quiz></div>
+    <div class="quiz__panel" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
+      <button class="quiz__close" data-close-quiz aria-label="Close">×</button>
+
+      <!-- Intro -->
+      <div class="quiz__screen" id="quizIntro">
+        <p class="eyebrow">Four questions</p>
+        <h2 id="quizTitle">Find your <em>scent</em></h2>
+        <p>Answer a few simple questions and we'll suggest fragrances that suit you.</p>
+        <button class="btn btn--primary" id="quizStartBtn">Begin</button>
+      </div>
+
+      <!-- Questions (filled by JS) -->
+      <div class="quiz__screen" id="quizQuestion" hidden>
+        <div class="quiz__progress"><span id="quizStep">1</span> / 4</div>
+        <h3 id="quizQuestionTitle"></h3>
+        <div class="quiz__options" id="quizOptions"></div>
+        <button class="quiz__back" id="quizBackBtn" type="button">← Back</button>
+      </div>
+
+      <!-- Results (filled by JS) -->
+      <div class="quiz__screen" id="quizResult" hidden>
+        <p class="eyebrow">Your matches</p>
+        <h2>For <em>you</em></h2>
+        <p id="quizResultSub"></p>
+        <div class="quiz__matches" id="quizMatches"></div>
+        <button class="btn btn--ghost" id="quizRestartBtn" type="button">Start again</button>
+      </div>
+    </div>
+  </div>
 
   <!-- WhatsApp floating button -->
   <a

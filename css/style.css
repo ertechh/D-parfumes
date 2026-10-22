@@ -97,6 +97,15 @@ button{font-family:inherit;cursor:pointer;}
 .btn:active{transform:translateY(1px) scale(.99);}
 .btn--primary{background:var(--ink);color:var(--white);}
 .btn--primary:hover{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+.btn--ghost{
+  background:none;
+  border:1px solid var(--ink);
+  color:var(--ink);
+}
+.btn--ghost:hover{
+  background:var(--ink);
+  color:var(--paper);
+}
 .btn--full{width:100%;}
 .btn:disabled{opacity:.4;cursor:not-allowed;pointer-events:none;}
 
@@ -114,6 +123,14 @@ button{font-family:inherit;cursor:pointer;}
 .hero h1{font-size:clamp(3rem,10vw,6.2rem);line-height:1.02;margin-bottom:1.6rem;}
 .hero h1 em{color:var(--gold);font-style:italic;}
 .hero__sub{max-width:24rem;color:var(--ink-soft);margin-bottom:2.4rem;font-size:.98rem;opacity:.85;line-height:1.7;}
+
+/* Hero actions (two buttons) */
+.hero__actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:1rem;
+}
+
 .hero__visual{
   aspect-ratio:4/5;border-radius:var(--radius);
   background:radial-gradient(circle at 50% 35%, #4b3b2b 0%, #2a221c 55%, #17130f 100%);
@@ -314,8 +331,14 @@ section{padding:5rem 1.5rem;}
   background:transparent;
   display:flex;flex-direction:column;cursor:pointer;
   transition:transform .7s var(--ease-luxe);
+  transform-style:preserve-3d;
+  will-change:transform;
 }
 .card:hover{transform:translateY(-8px);}
+.card.is-tilting{transition:transform .1s linear;}
+.card.is-tilting:hover{transform:none;}
+.card__media,
+.card__body{transform:translateZ(0.01px);}
 .card__media{
   aspect-ratio:4/5;position:relative;
   background:linear-gradient(150deg,var(--paper-alt),#e5dccd);
@@ -633,6 +656,213 @@ section{padding:5rem 1.5rem;}
 .product-grid .card:nth-child(6){transition-delay:.30s;}
 .product-grid .card:nth-child(7){transition-delay:.36s;}
 
+/* ============================================================
+   Obvious animations — hero letter reveal, card tilt, cart pulse
+   ============================================================ */
+
+/* ---------- Hero letter-by-letter reveal ---------- */
+.hero h1 .letter{
+  display:inline-block;
+  opacity:0;
+  transform:translateY(0.35em) rotateX(-40deg);
+  animation:letterIn 0.9s var(--ease-luxe) forwards;
+  will-change:transform, opacity;
+  transform-origin:bottom center;
+}
+.hero h1 .space{
+  display:inline-block;
+  width:0.28em;
+}
+.hero h1 .line{display:block;}
+.hero h1 .line--2{overflow:hidden;}
+.hero h1 .line--2 .letter{
+  animation-delay:calc(var(--i, 0) * 0.04s + 0.6s);
+}
+.hero h1 .line--1 .letter{
+  animation-delay:calc(var(--i, 0) * 0.035s + 0.2s);
+}
+@keyframes letterIn{
+  to{opacity:1;transform:translateY(0) rotateX(0);}
+}
+
+/* Adjust hero content timing when letter reveal is active */
+.hero__content > *:nth-child(1){animation-delay:.1s !important;}
+.hero__content > *:nth-child(3){animation-delay:1.4s !important;}
+.hero__content > *:nth-child(4){animation-delay:1.7s !important;}
+.hero__content > *:nth-child(2){animation:none !important;opacity:1 !important;transform:none !important;}
+
+/* ---------- Cart badge pulse ---------- */
+.cart-count.pulse{
+  animation:cartPulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes cartPulse{
+  0%   {transform:scale(1);}
+  35%  {transform:scale(1.55);background:var(--gold-soft);}
+  100% {transform:scale(1);background:var(--gold);}
+}
+
+/* ============================================================
+   Scent Finder Quiz
+   ============================================================ */
+.quiz{
+  position:fixed;
+  inset:0;
+  z-index:105;
+  display:grid;
+  place-items:center;
+  padding:1rem;
+}
+.quiz[hidden]{display:none;}
+.quiz__backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(26,23,20,.72);
+  backdrop-filter:blur(6px);
+}
+.quiz__panel{
+  position:relative;
+  background:var(--paper);
+  max-width:640px;
+  width:100%;
+  max-height:92vh;
+  overflow-y:auto;
+  padding:3rem 2rem;
+  animation:rise .6s var(--ease-luxe);
+}
+.quiz__close{
+  position:absolute;
+  top:.8rem;
+  right:1rem;
+  background:none;
+  border:none;
+  font-size:1.6rem;
+  color:var(--ink);
+  line-height:1;
+  transition:color .35s ease;
+}
+.quiz__close:hover{color:var(--gold);}
+
+.quiz__screen h2{
+  font-size:clamp(1.9rem,4vw,2.6rem);
+  margin-bottom:.8rem;
+}
+.quiz__screen h2 em{color:var(--gold);font-style:italic;}
+.quiz__screen h3{
+  font-size:clamp(1.4rem,3vw,1.9rem);
+  margin:1rem 0 1.8rem;
+  font-weight:400;
+  line-height:1.2;
+}
+.quiz__screen > p{
+  color:var(--ink-soft);
+  line-height:1.7;
+  margin-bottom:1.6rem;
+}
+
+.quiz__progress{
+  font-size:.7rem;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:.5rem;
+}
+
+.quiz__options{
+  display:flex;
+  flex-direction:column;
+  gap:.7rem;
+  margin-bottom:1.6rem;
+}
+.quiz-option{
+  background:transparent;
+  border:1px solid var(--line);
+  padding:1.05rem 1.2rem;
+  font-family:inherit;
+  font-size:.92rem;
+  color:var(--ink);
+  text-align:left;
+  letter-spacing:.01em;
+  transition:all .35s var(--ease-luxe);
+  cursor:pointer;
+}
+.quiz-option:hover{
+  border-color:var(--gold);
+  background:rgba(176,141,87,.06);
+}
+
+.quiz__back{
+  background:none;
+  border:none;
+  padding:0;
+  font-size:.72rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  transition:color .35s ease;
+  cursor:pointer;
+}
+.quiz__back:hover{color:var(--gold);}
+
+/* Quiz results */
+.quiz__matches{
+  display:flex;
+  flex-direction:column;
+  gap:1.2rem;
+  margin:1.5rem 0 2rem;
+}
+.quiz-match{
+  display:grid;
+  grid-template-columns:100px 1fr;
+  gap:1.2rem;
+  align-items:center;
+  padding:1rem;
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:border-color .4s var(--ease-luxe), transform .4s var(--ease-luxe);
+}
+.quiz-match:hover{
+  border-color:var(--gold-soft);
+  transform:translateY(-2px);
+}
+.quiz-match__media{
+  width:100px;
+  height:100px;
+  overflow:hidden;
+  background:linear-gradient(150deg,var(--paper-alt),#e5dccd);
+  position:relative;
+}
+.quiz-match__media img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.quiz-match__body h3{
+  font-family:var(--font-display);
+  font-size:1.25rem;
+  font-weight:400;
+  margin:.2rem 0 .3rem;
+}
+.quiz-match__body p{
+  font-size:.78rem;
+  color:var(--ink-soft);
+  margin-bottom:.5rem;
+}
+.quiz-match__foot{
+  display:flex;
+  justify-content:space-between;
+  font-size:.82rem;
+  padding-top:.5rem;
+  border-top:1px solid var(--line);
+}
+.quiz-match__foot span:last-child{
+  color:var(--ink-soft);
+  font-size:.7rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
 /* ---------- Responsive ---------- */
 @media(min-width:720px){
   .nav{display:flex;}
@@ -652,6 +882,16 @@ section{padding:5rem 1.5rem;}
   .footer__cols{grid-template-columns:repeat(3,1fr);}
 }
 
+/* ---------- Mobile tweaks for quiz ---------- */
+@media (max-width:480px){
+  .quiz__panel{padding:2rem 1.2rem;}
+  .quiz-match{grid-template-columns:76px 1fr;gap:.8rem;}
+  .quiz-match__media{width:76px;height:76px;}
+  .quiz-match__body h3{font-size:1.05rem;}
+  .hero__actions{flex-direction:column;}
+  .hero__actions .btn{width:100%;text-align:center;}
+}
+
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce){
   *, *::before, *::after{
@@ -667,8 +907,18 @@ section{padding:5rem 1.5rem;}
   .hero__glow{
     animation:none !important;
   }
+  .hero h1 .letter{
+    opacity:1 !important;
+    transform:none !important;
+    animation:none !important;
+  }
   .reveal{opacity:1;transform:none;}
+  .card{
+    transform:none !important;
+    transition:none !important;
+  }
   .card:hover{transform:none;}
   .card:hover .card__media img{transform:none;}
+  .cart-count.pulse{animation:none !important;}
   .whatsapp-btn:hover{transform:none;}
 }
